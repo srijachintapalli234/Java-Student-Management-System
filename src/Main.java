@@ -47,7 +47,7 @@ public class Main {
         }
     }
 
-    // Display Main Menu
+    // Main Menu
     private static void displayMenu() {
 
         System.out.println();
@@ -71,20 +71,11 @@ public class Main {
         System.out.println("                 ADD STUDENT");
         System.out.println("================================================");
 
-        System.out.print("Enter name: ");
-        String name = scanner.nextLine();
-
-        System.out.print("Enter email: ");
-        String email = scanner.nextLine();
-
-        System.out.print("Enter phone: ");
-        String phone = scanner.nextLine();
-
-        System.out.print("Enter department: ");
-        String department = scanner.nextLine();
-
-        System.out.print("Enter year: ");
-        int year = readInt();
+        String name = readNonEmpty("Enter name: ");
+        String email = readEmail();
+        String phone = readPhone();
+        String department = readNonEmpty("Enter department: ");
+        int year = readYear();
 
         Student student = new Student(
                 name,
@@ -149,7 +140,7 @@ public class Main {
         System.out.println("================================================");
 
         System.out.print("Enter student ID: ");
-        int id = readInt();
+        int id = readPositiveInt();
 
         Student student = studentDAO.getStudentById(id);
 
@@ -171,7 +162,7 @@ public class Main {
         System.out.println("================================================");
 
         System.out.print("Enter student ID: ");
-        int id = readInt();
+        int id = readPositiveInt();
 
         Student existingStudent = studentDAO.getStudentById(id);
 
@@ -183,20 +174,11 @@ public class Main {
         System.out.println("\nCurrent student details:");
         System.out.println(existingStudent);
 
-        System.out.print("\nEnter new name: ");
-        String name = scanner.nextLine();
-
-        System.out.print("Enter new email: ");
-        String email = scanner.nextLine();
-
-        System.out.print("Enter new phone: ");
-        String phone = scanner.nextLine();
-
-        System.out.print("Enter new department: ");
-        String department = scanner.nextLine();
-
-        System.out.print("Enter new year: ");
-        int year = readInt();
+        String name = readNonEmpty("\nEnter new name: ");
+        String email = readEmail();
+        String phone = readPhone();
+        String department = readNonEmpty("Enter new department: ");
+        int year = readYear();
 
         Student updatedStudent = new Student(
                 id,
@@ -222,7 +204,7 @@ public class Main {
         System.out.println("================================================");
 
         System.out.print("Enter student ID: ");
-        int id = readInt();
+        int id = readPositiveInt();
 
         Student student = studentDAO.getStudentById(id);
 
@@ -235,7 +217,7 @@ public class Main {
         System.out.println(student);
 
         System.out.print("\nAre you sure you want to delete? (yes/no): ");
-        String confirmation = scanner.nextLine();
+        String confirmation = scanner.nextLine().trim();
 
         if (confirmation.equalsIgnoreCase("yes")) {
 
@@ -247,6 +229,76 @@ public class Main {
 
         } else {
             System.out.println("\nDelete operation cancelled.");
+        }
+    }
+
+    // Read non-empty text
+    private static String readNonEmpty(String message) {
+
+        while (true) {
+
+            System.out.print(message);
+            String input = scanner.nextLine().trim();
+
+            if (!input.isEmpty()) {
+                return input;
+            }
+
+            System.out.println("Input cannot be empty. Please try again.");
+        }
+    }
+
+    // Read valid email
+    private static String readEmail() {
+
+        while (true) {
+
+            System.out.print("Enter email: ");
+            String email = scanner.nextLine().trim();
+
+            if (email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+                return email;
+            }
+
+            System.out.println("Invalid email. Please enter a valid email address.");
+        }
+    }
+
+    // Read 10-digit phone number
+    private static String readPhone() {
+
+        while (true) {
+
+            System.out.print("Enter phone: ");
+            String phone = scanner.nextLine().trim();
+
+            if (phone.matches("\\d{10}")) {
+                return phone;
+            }
+
+            System.out.println("Invalid phone. Enter exactly 10 digits.");
+        }
+    }
+
+    // Read year from 1 to 4
+    private static int readYear() {
+
+        while (true) {
+
+            System.out.print("Enter year: ");
+
+            try {
+                int year = Integer.parseInt(scanner.nextLine().trim());
+
+                if (year >= 1 && year <= 4) {
+                    return year;
+                }
+
+                System.out.println("Invalid year. Please enter a number from 1 to 4.");
+
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a number from 1 to 4.");
+            }
         }
     }
 
@@ -262,6 +314,21 @@ public class Main {
             } catch (NumberFormatException e) {
                 System.out.print("Please enter a valid number: ");
             }
+        }
+    }
+
+    // Read positive integer
+    private static int readPositiveInt() {
+
+        while (true) {
+
+            int number = readInt();
+
+            if (number > 0) {
+                return number;
+            }
+
+            System.out.print("Please enter a positive number: ");
         }
     }
 }
