@@ -10,16 +10,7 @@ public class Main {
 
         while (true) {
 
-            System.out.println("\n=================================");
-            System.out.println("     STUDENT MANAGEMENT SYSTEM");
-            System.out.println("=================================");
-            System.out.println("1. Add Student");
-            System.out.println("2. View All Students");
-            System.out.println("3. Search Student");
-            System.out.println("4. Update Student");
-            System.out.println("5. Delete Student");
-            System.out.println("6. Exit");
-            System.out.print("Enter your choice: ");
+            displayMenu();
 
             int choice = readInt();
 
@@ -46,20 +37,39 @@ public class Main {
                     break;
 
                 case 6:
-                    System.out.println("Thank you for using Student Management System!");
+                    System.out.println("\nThank you for using Student Management System!");
                     scanner.close();
                     return;
 
                 default:
-                    System.out.println("Invalid choice. Please try again.");
+                    System.out.println("\nInvalid choice. Please select 1-6.");
             }
         }
+    }
+
+    // Display Main Menu
+    private static void displayMenu() {
+
+        System.out.println();
+        System.out.println("================================================");
+        System.out.println("          STUDENT MANAGEMENT SYSTEM");
+        System.out.println("================================================");
+        System.out.println("  1. Add Student");
+        System.out.println("  2. View All Students");
+        System.out.println("  3. Search Student");
+        System.out.println("  4. Update Student");
+        System.out.println("  5. Delete Student");
+        System.out.println("  6. Exit");
+        System.out.println("================================================");
+        System.out.print("Enter your choice: ");
     }
 
     // Add Student
     private static void addStudent() {
 
-        System.out.println("\n--- Add Student ---");
+        System.out.println("\n================================================");
+        System.out.println("                 ADD STUDENT");
+        System.out.println("================================================");
 
         System.out.print("Enter name: ");
         String name = scanner.nextLine();
@@ -85,16 +95,18 @@ public class Main {
         );
 
         if (studentDAO.addStudent(student)) {
-            System.out.println("Student added successfully!");
+            System.out.println("\n✓ Student added successfully!");
         } else {
-            System.out.println("Failed to add student.");
+            System.out.println("\n✗ Failed to add student.");
         }
     }
 
     // View All Students
     private static void viewStudents() {
 
-        System.out.println("\n--- All Students ---");
+        System.out.println("\n================================================");
+        System.out.println("                ALL STUDENTS");
+        System.out.println("================================================");
 
         List<Student> students = studentDAO.getAllStudents();
 
@@ -103,15 +115,38 @@ public class Main {
             return;
         }
 
+        System.out.printf(
+                "%-5s %-22s %-30s %-15s %-15s %-5s%n",
+                "ID", "NAME", "EMAIL", "PHONE", "DEPARTMENT", "YEAR"
+        );
+
+        System.out.println(
+                "------------------------------------------------------------------------------------------"
+        );
+
         for (Student student : students) {
-            System.out.println(student);
+            System.out.printf(
+                    "%-5d %-22s %-30s %-15s %-15s %-5d%n",
+                    student.getId(),
+                    student.getName(),
+                    student.getEmail(),
+                    student.getPhone(),
+                    student.getDepartment(),
+                    student.getYear()
+            );
         }
+
+        System.out.println(
+                "------------------------------------------------------------------------------------------"
+        );
     }
 
     // Search Student
     private static void searchStudent() {
 
-        System.out.println("\n--- Search Student ---");
+        System.out.println("\n================================================");
+        System.out.println("               SEARCH STUDENT");
+        System.out.println("================================================");
 
         System.out.print("Enter student ID: ");
         int id = readInt();
@@ -119,17 +154,21 @@ public class Main {
         Student student = studentDAO.getStudentById(id);
 
         if (student != null) {
-            System.out.println("\nStudent found:");
+            System.out.println("\n✓ Student found:");
+            System.out.println("-----------------------------------------------");
             System.out.println(student);
+            System.out.println("-----------------------------------------------");
         } else {
-            System.out.println("Student not found.");
+            System.out.println("\n✗ Student not found.");
         }
     }
 
     // Update Student
     private static void updateStudent() {
 
-        System.out.println("\n--- Update Student ---");
+        System.out.println("\n================================================");
+        System.out.println("               UPDATE STUDENT");
+        System.out.println("================================================");
 
         System.out.print("Enter student ID: ");
         int id = readInt();
@@ -137,11 +176,14 @@ public class Main {
         Student existingStudent = studentDAO.getStudentById(id);
 
         if (existingStudent == null) {
-            System.out.println("Student not found.");
+            System.out.println("\n✗ Student not found.");
             return;
         }
 
-        System.out.print("Enter new name: ");
+        System.out.println("\nCurrent student details:");
+        System.out.println(existingStudent);
+
+        System.out.print("\nEnter new name: ");
         String name = scanner.nextLine();
 
         System.out.print("Enter new email: ");
@@ -166,16 +208,18 @@ public class Main {
         );
 
         if (studentDAO.updateStudent(updatedStudent)) {
-            System.out.println("Student updated successfully!");
+            System.out.println("\n✓ Student updated successfully!");
         } else {
-            System.out.println("Failed to update student.");
+            System.out.println("\n✗ Failed to update student.");
         }
     }
 
     // Delete Student
     private static void deleteStudent() {
 
-        System.out.println("\n--- Delete Student ---");
+        System.out.println("\n================================================");
+        System.out.println("               DELETE STUDENT");
+        System.out.println("================================================");
 
         System.out.print("Enter student ID: ");
         int id = readInt();
@@ -183,25 +227,26 @@ public class Main {
         Student student = studentDAO.getStudentById(id);
 
         if (student == null) {
-            System.out.println("Student not found.");
+            System.out.println("\n✗ Student not found.");
             return;
         }
 
-        System.out.println("Student: " + student);
+        System.out.println("\nStudent selected:");
+        System.out.println(student);
 
-        System.out.print("Are you sure you want to delete? (yes/no): ");
+        System.out.print("\nAre you sure you want to delete? (yes/no): ");
         String confirmation = scanner.nextLine();
 
         if (confirmation.equalsIgnoreCase("yes")) {
 
             if (studentDAO.deleteStudent(id)) {
-                System.out.println("Student deleted successfully!");
+                System.out.println("\n✓ Student deleted successfully!");
             } else {
-                System.out.println("Failed to delete student.");
+                System.out.println("\n✗ Failed to delete student.");
             }
 
         } else {
-            System.out.println("Delete operation cancelled.");
+            System.out.println("\nDelete operation cancelled.");
         }
     }
 
@@ -211,7 +256,7 @@ public class Main {
         while (true) {
 
             try {
-                String input = scanner.nextLine();
+                String input = scanner.nextLine().trim();
                 return Integer.parseInt(input);
 
             } catch (NumberFormatException e) {
